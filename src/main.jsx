@@ -1,6 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ArrowUpRight, Mail, Menu, X, Terminal as TerminalIcon, BrainCircuit, BarChart3, Code2, Cpu } from 'lucide-react';
+import { ArrowUpRight, Mail, Menu, X, Terminal as TerminalIcon, BrainCircuit, BarChart3, Code2, Cpu, Home, Moon, Sun } from 'lucide-react';
 import { SiPython, SiR, SiJavascript, SiMysql, SiReact, SiStreamlit, SiFastapi, SiPandas, SiScikitlearn, SiTensorflow, SiJupyter, SiDocker, SiGithub, SiOpencv } from 'react-icons/si';
 import { FaLinkedinIn } from 'react-icons/fa6';
 import { motion } from 'framer-motion';
@@ -62,12 +62,28 @@ const skillGroups = [
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activePage, setActivePage] = useState('home');
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDark, setIsDark] = useState(() => window.localStorage.getItem('portfolio-theme') === 'dark');
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setIsLoading(false), 1800);
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
+    window.localStorage.setItem('portfolio-theme', isDark ? 'dark' : 'light');
+  }, [isDark]);
+
   const closeMenu = () => setMenuOpen(false);
   const navigateTo = (page) => {
     setActivePage(page);
     closeMenu();
   };
   const navItems = [
+    ['home', 'Home'],
     ['work', 'Selected work'],
     ['about', 'About me'],
     ['skills', 'Toolkit'],
@@ -75,15 +91,20 @@ function App() {
   ];
 
   return (
-    <div className="site-shell">
+    <>
+      {isLoading && <LoadingScreen />}
+      <div className={`site-shell ${isDark ? 'is-dark' : ''}`}>
       <div className="noise" />
       <header className="nav-wrap">
         <nav className="nav container">
           <button className="wordmark" type="button" onClick={() => navigateTo('home')}>CDK<span>.</span></button>
           <button className="menu-button" aria-label="Toggle navigation" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X size={21} /> : <Menu size={21} />}</button>
           <div className={`nav-links ${menuOpen ? 'is-open' : ''}`}>
-            {navItems.map(([page, label]) => <button className={activePage === page ? 'active' : ''} type="button" key={page} onClick={() => navigateTo(page)}>{label}</button>)}
-            <a className="nav-cta" href="mailto:chinthakdivan@gmail.com" onClick={closeMenu}>Let's talk <ArrowUpRight size={16} /></a>
+            {navItems.map(([page, label]) => <button className={activePage === page ? 'active' : ''} type="button" key={page} onClick={() => navigateTo(page)}>{page === 'home' && <Home size={14} />}{label}</button>)}
+            <button className="nav-cta" type="button" onClick={() => navigateTo('contact')}>Let's talk <ArrowUpRight size={16} /></button>
+            <button className="theme-toggle" type="button" onClick={() => setIsDark((current) => !current)} aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}>
+              {isDark ? <Sun size={15} /> : <Moon size={15} />} <span>{isDark ? 'Light' : 'Dark'}</span>
+            </button>
           </div>
         </nav>
       </header>
@@ -96,9 +117,10 @@ function App() {
             <p className="hero-intro">AI and Data Science student turning raw data and curious questions into useful, human-centered tools.</p>
             <div className="hero-actions">
               <button className="button button-primary" type="button" onClick={() => navigateTo('work')}>Explore my work <ArrowUpRight size={17} /></button>
-              <a className="text-link" href="mailto:chinthakdivan@gmail.com">Get in touch <Mail size={16} /></a>
+              <button className="text-link text-link-button" type="button" onClick={() => navigateTo('contact')}>Get in touch <Mail size={16} /></button>
             </div>
             <GithubStat />
+            <div className="home-photo"><img src="https://i.postimg.cc/4sqV5nhk/073b4642-30dd-476b-aa83-b75e5430c135-1-all-119.jpg?dl=1" alt="Chinthak outdoors" /></div>
           </div>
           <div className="hero-orbit reveal delay-one"><NeuralNode /></div>
         </section>}
@@ -116,8 +138,25 @@ function App() {
 
         {activePage === 'contact' && <section className="contact-section" id="contact"><div className="container contact-inner"><p className="section-kicker">Have a question or an idea?</p><h2>Let’s make something<br /><em>meaningful.</em></h2><div className="contact-terminal"><div className="terminal-bar"><span /><span /><span /><strong><TerminalIcon size={14} /> chinthak@portfolio:~</strong></div><div className="terminal-body"><p><b>→</b> choose a connection</p><a href="https://github.com/Chinthak123" target="_blank" rel="noreferrer"><SiGithub size={21} /><span>github.com/Chinthak123</span><ArrowUpRight size={16} /></a><a href="https://www.linkedin.com/in/chinthak-divan-k-808bb5233" target="_blank" rel="noreferrer"><FaLinkedinIn size={21} /><span>linkedin.com/in/chinthak-divan-k-808bb5233</span><ArrowUpRight size={16} /></a><a href="mailto:chinthakdivan@gmail.com"><Mail size={21} /><span>chinthakdivan@gmail.com</span><ArrowUpRight size={16} /></a></div></div><div className="contact-meta"><span>Chinthak Divan K / 2026</span></div></div></section>}
       </main>
-    </div>
+      </div>
+    </>
   );
+}
+
+function LoadingScreen() {
+  return <div className="loading-screen" role="status" aria-label="Loading portfolio">
+    <div className="loading-terminal">
+      <div className="loading-terminal-bar"><span /><span /><span /><strong><TerminalIcon size={14} /> chinthak@portfolio:~</strong></div>
+      <div className="loading-terminal-body">
+        <p><b>$</b> ./load-portfolio.sh</p>
+        <p className="loading-line"><span>▸</span> Initializing interface <strong>OK</strong></p>
+        <p className="loading-line"><span>▸</span> Loading selected work <strong>OK</strong></p>
+        <p className="loading-line"><span>▸</span> Preparing experience <strong>OK</strong></p>
+        <div className="loading-progress"><span /></div>
+        <p className="loading-percent">Downloading assets... <em>100%</em></p>
+      </div>
+    </div>
+  </div>;
 }
 
 function NeuralNode() {
