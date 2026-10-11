@@ -61,54 +61,60 @@ const skillGroups = [
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activePage, setActivePage] = useState('home');
   const closeMenu = () => setMenuOpen(false);
+  const navigateTo = (page) => {
+    setActivePage(page);
+    closeMenu();
+  };
+  const navItems = [
+    ['work', 'Selected work'],
+    ['about', 'About me'],
+    ['skills', 'Toolkit'],
+    ['contact', 'Contact'],
+  ];
 
   return (
     <div className="site-shell">
       <div className="noise" />
       <header className="nav-wrap">
         <nav className="nav container">
-          <a className="wordmark" href="#top" onClick={closeMenu}>CDK<span>.</span></a>
+          <button className="wordmark" type="button" onClick={() => navigateTo('home')}>CDK<span>.</span></button>
           <button className="menu-button" aria-label="Toggle navigation" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X size={21} /> : <Menu size={21} />}</button>
           <div className={`nav-links ${menuOpen ? 'is-open' : ''}`}>
-            <a href="#work" onClick={closeMenu}>Selected work</a>
-            <a href="#about" onClick={closeMenu}>About me</a>
-            <a href="#contact" onClick={closeMenu}>Contact</a>
+            {navItems.map(([page, label]) => <button className={activePage === page ? 'active' : ''} type="button" key={page} onClick={() => navigateTo(page)}>{label}</button>)}
             <a className="nav-cta" href="mailto:chinthakdivan@gmail.com" onClick={closeMenu}>Let's talk <ArrowUpRight size={16} /></a>
           </div>
         </nav>
       </header>
 
-      <main id="top">
-        <section className="hero container">
+      <main className={`page-view page-${activePage}`} id="top">
+        {activePage === 'home' && <section className="hero container">
           <div className="hero-copy reveal">
             <p className="eyebrow"><span className="status-dot" /> Available for interesting problems</p>
             <h1 className="hero-name">Chinthak<br /><em>Divan K.</em></h1>
             <p className="hero-intro">AI and Data Science student turning raw data and curious questions into useful, human-centered tools.</p>
             <div className="hero-actions">
-              <a className="button button-primary" href="#work">Explore my work <ArrowUpRight size={17} /></a>
+              <button className="button button-primary" type="button" onClick={() => navigateTo('work')}>Explore my work <ArrowUpRight size={17} /></button>
               <a className="text-link" href="mailto:chinthakdivan@gmail.com">Get in touch <Mail size={16} /></a>
             </div>
             <GithubStat />
           </div>
           <div className="hero-orbit reveal delay-one"><NeuralNode /></div>
-          <div className="scroll-note"><span>01</span><div className="scroll-line" /> Scroll to explore</div>
-        </section>
+        </section>}
 
-        <section className="marquee" aria-label="Areas of interest"><div>AI & DATA SCIENCE <span>✦</span> MACHINE LEARNING <span>✦</span> DATA VISUALIZATION <span>✦</span> HUMAN-CENTERED TOOLS <span>✦</span></div></section>
-
-        <section className="work-section container" id="work">
+        {activePage === 'work' && <><section className="marquee" aria-label="Areas of interest"><div>AI & DATA SCIENCE <span>✦</span> MACHINE LEARNING <span>✦</span> DATA VISUALIZATION <span>✦</span> HUMAN-CENTERED TOOLS <span>✦</span></div></section><section className="work-section container" id="work">
           <div className="section-heading"><div><p className="section-kicker">Selected work <span>04 projects</span></p><h2>A few things I’ve<br /><em>made real.</em></h2></div><p className="section-aside">Every project starts with a messy question.<br />That’s usually the interesting part.</p></div>
           <div className="project-grid">{projects.map((project) => <ProjectCard key={project.number} project={project} />)}</div>
-        </section>
+        </section></>}
 
-        <section className="about-section" id="about">
+        {activePage === 'about' && <section className="about-section" id="about">
           <div className="container about-layout"><div><p className="section-kicker">The person behind the projects</p><h2>More than just<br /><em>the model.</em></h2></div><div className="about-copy"><p>I like sitting at the intersection of technical depth and clear communication. Whether I’m cleaning a dataset, training a model, or presenting an insight, I care about making the final result feel obvious and useful.</p><p>When I’m away from a notebook, you’ll find me learning something new, breaking down complex ideas, or looking for the next problem worth solving.</p><a className="text-link" href="https://github.com/Chinthak123" target="_blank" rel="noreferrer">More on GitHub <ArrowUpRight size={16} /></a></div></div>
-        </section>
+        </section>}
 
-        <section className="skills-section container"><div className="section-heading skills-heading"><div><p className="section-kicker">My toolkit</p><h2>Curious by nature.<br /><em>Equipped by practice.</em></h2></div></div><SkillOrbit /><div className="skills-grid tools-grid"><div className="skill-group"><div className="skill-title"><Cpu size={19} /><h3>Frameworks & tools</h3></div><div className="skill-list">{skillGroups[1].items.map((item) => <span className="skill-symbol" key={item.name} title={item.name} aria-label={item.name}>{(() => { const Logo = item.symbol; return <Logo aria-hidden="true" />; })()}</span>)}</div></div></div><div className="how-i-work"><div className="skill-title"><BrainCircuit size={19} /><h3>How I work</h3></div><div className="soft-skill-list">{skillGroups[2].items.map((item) => <span key={item}>{item}</span>)}</div></div></section>
+        {activePage === 'skills' && <section className="skills-section container"><div className="section-heading skills-heading"><div><p className="section-kicker">My toolkit</p><h2>Curious by nature.<br /><em>Equipped by practice.</em></h2></div></div><SkillOrbit /><div className="skills-grid tools-grid"><div className="skill-group"><div className="skill-title"><Cpu size={19} /><h3>Frameworks & tools</h3></div><div className="skill-list">{skillGroups[1].items.map((item) => <span className="skill-symbol" key={item.name} title={item.name} aria-label={item.name}>{(() => { const Logo = item.symbol; return <Logo aria-hidden="true" />; })()}</span>)}</div></div></div><div className="how-i-work"><div className="skill-title"><BrainCircuit size={19} /><h3>How I work</h3></div><div className="soft-skill-list">{skillGroups[2].items.map((item) => <span key={item}>{item}</span>)}</div></div></section>}
 
-        <section className="contact-section" id="contact"><div className="container contact-inner"><p className="section-kicker">Have a question or an idea?</p><h2>Let’s make something<br /><em>meaningful.</em></h2><div className="contact-terminal"><div className="terminal-bar"><span /><span /><span /><strong><TerminalIcon size={14} /> chinthak@portfolio:~</strong></div><div className="terminal-body"><p><b>→</b> choose a connection</p><a href="https://github.com/Chinthak123" target="_blank" rel="noreferrer"><SiGithub size={21} /><span>github.com/Chinthak123</span><ArrowUpRight size={16} /></a><a href="https://www.linkedin.com/in/chinthak-divan-k-808bb5233" target="_blank" rel="noreferrer"><FaLinkedinIn size={21} /><span>linkedin.com/in/chinthak-divan-k-808bb5233</span><ArrowUpRight size={16} /></a><a href="mailto:chinthakdivan@gmail.com"><Mail size={21} /><span>chinthakdivan@gmail.com</span><ArrowUpRight size={16} /></a></div></div><div className="contact-meta"><span>Chinthak Divan K / 2026</span></div></div></section>
+        {activePage === 'contact' && <section className="contact-section" id="contact"><div className="container contact-inner"><p className="section-kicker">Have a question or an idea?</p><h2>Let’s make something<br /><em>meaningful.</em></h2><div className="contact-terminal"><div className="terminal-bar"><span /><span /><span /><strong><TerminalIcon size={14} /> chinthak@portfolio:~</strong></div><div className="terminal-body"><p><b>→</b> choose a connection</p><a href="https://github.com/Chinthak123" target="_blank" rel="noreferrer"><SiGithub size={21} /><span>github.com/Chinthak123</span><ArrowUpRight size={16} /></a><a href="https://www.linkedin.com/in/chinthak-divan-k-808bb5233" target="_blank" rel="noreferrer"><FaLinkedinIn size={21} /><span>linkedin.com/in/chinthak-divan-k-808bb5233</span><ArrowUpRight size={16} /></a><a href="mailto:chinthakdivan@gmail.com"><Mail size={21} /><span>chinthakdivan@gmail.com</span><ArrowUpRight size={16} /></a></div></div><div className="contact-meta"><span>Chinthak Divan K / 2026</span></div></div></section>}
       </main>
     </div>
   );

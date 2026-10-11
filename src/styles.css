@@ -44,3 +44,19 @@ h1, h2, h3, p { margin-top: 0; } h1 { font-size: clamp(64px, 8.7vw, 126px); line
 @media (max-width: 760px) { .skill-orbit { height: 290px; margin-bottom: 65px; }.code-orbit-core { width: 112px; height: 112px; }.code-orbit-core svg { width: 44px; height: 44px; }.orbit-track { width: 230px; height: 135px; }.orbit-track-two { width: 145px; height: 230px; }.orbit-skill { width: 42px; height: 42px; left: calc(50% - 21px); top: calc(50% - 21px); font-size: 20px; transform: rotate(var(--angle)) translateX(112px) rotate(calc(var(--angle) * -1)); }.skill-orbit.is-active .orbit-skill { animation-name: orbitSkillSmall; }.how-i-work { display: block; margin-top: 58px; }.how-i-work .skill-title { margin-bottom: 18px; }.soft-skill-list { gap: 7px; }.soft-skill-list span { font-size: 11px; padding: 8px 9px; } }
 @keyframes orbitSkillSmall { from { transform: rotate(var(--angle)) translateX(112px) rotate(calc(var(--angle) * -1)); } to { transform: rotate(calc(var(--angle) + 360deg)) translateX(112px) rotate(calc((var(--angle) + 360deg) * -1)); } }
 @media (max-width: 420px) { .container { padding-left: 16px; padding-right: 16px; }.hero { padding-top: 60px; }.hero-name { font-size: 54px; }.neural-node { height: 455px; }.neural-panel { transform: scale(.68); }.input-panel { left: 0; }.core-panel { left: 31%; }.output-panel { right: 0; }.neural-lines, .neural-streams { height: 135px; }.neural-metrics { top: 230px; }.neural-controls { top: 315px; }.focus-tabs span, .focus-tabs strong { font-size: 9px; }.terminal-body a span { word-break: break-word; } }
+
+html { height: 100%; }
+body { height: 100%; }
+.site-shell { height: 100vh; }
+.page-view { height: calc(100vh - 83px); overflow-y: auto; overflow-x: hidden; }
+.page-home { overflow: hidden; }
+.page-view::-webkit-scrollbar { width: 7px; }
+.page-view::-webkit-scrollbar-thumb { background: rgba(173,255,82,.35); border-radius: 8px; }
+.wordmark, .nav-links button { font: inherit; }
+.wordmark { border: 0; background: transparent; color: inherit; cursor: pointer; padding: 0; }
+.nav-links button { border: 0; padding: 0; background: transparent; color: inherit; cursor: pointer; }
+.nav-links button:hover, .nav-links button.active { color: var(--green); }
+.button { border: 0; cursor: pointer; font-family: inherit; }
+@media (max-width: 760px) {
+  .page-view { height: calc(100vh - 69px); }
+}
